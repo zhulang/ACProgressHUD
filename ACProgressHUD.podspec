@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   s.name         = "ACProgressHUD"
   s.version      = "0.0.1"
-  s.summary      = "A Tips tool view framework."
+  s.summary      = "A small pop-up box framework."
   s.ios.deployment_target = "5.0"
   s.osx.deployment_target = "10.7"
   s.homepage     = "https://github.com/zhulang/ACProgressHUD"
