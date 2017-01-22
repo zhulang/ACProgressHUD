@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:ACProcessHUD_DEMO.xcodeproj">
+      location = "self:ACProgressHUDExample.xcodeproj">
    </FileRef>
 </Workspace>

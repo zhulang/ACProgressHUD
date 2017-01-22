@@ -1,13 +1,13 @@
 //
 //  ViewController.m
-//  ACProcessHUD_DEMO
+//  ACProgressHUDExample
 //
 //  Created by Achilles on 2017/1/22.
 //  Copyright © 2017年 Achilles_Chu. All rights reserved.
 //
-
-#import "ViewController.h"
 #import "ACProgressHUD.h"
+#import "ViewController.h"
+
 @interface ViewController ()
 
 @end
@@ -19,8 +19,8 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (IBAction)clickTestButton:(UIButton *)sender {
-    [ACProgressHUD showScuess:@"成功导入ACProgressHUD了"];
+- (IBAction)clickTest:(UIButton *)sender {
+    [ACProgressHUD showScuess:@"成功了"];
 }
 
 - (void)didReceiveMemoryWarning {
