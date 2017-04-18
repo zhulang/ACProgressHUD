@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
     s.name         = 'ACProgressHUD'
-    s.version      = '0.0.3'
+    s.version      = '0.0.5'
     s.summary      = 'An easy way to use pop-up box'
     s.homepage     = 'https://github.com/zhulang/ACProgressHUD'
     s.license      = 'MIT'
