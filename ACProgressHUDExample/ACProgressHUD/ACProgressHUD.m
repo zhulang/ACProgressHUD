@@ -7,7 +7,7 @@
 //
 
 #import "ACProgressHUD.h"
-
+NSString * TOAST_COLOR = @"TOAST_COLOR";
 #define ACProgressHUD_ScreenWidth [UIScreen mainScreen].bounds.size.width //the screen width
 
 /*delay time ,unit NSTimeInterval */
@@ -21,7 +21,6 @@ static CGFloat  hudMaxHeight;//tht Max height of content (contain image and txt)
 
 static CGFloat  contentMargin;//the margin is the distance between to the nearest side,default 15.0
 static CGFloat  contentCornerRadius;//content view cornerRadius,default 5.0
-static CGFloat  hudToTop;//content view cornerRadius,default 30
 
 /*the size of loading view */
 static CGSize  indicatorViewSize;//default {30,30}
@@ -50,11 +49,11 @@ static UIWindow * _window;
     textFont = [UIFont systemFontOfSize:15.0];
     hudColor = [UIColor blackColor];
     textColor = [UIColor whiteColor];
-    hudToTop = [UIScreen mainScreen].bounds.size.height * 0.5 - 50;
+//    hudToTop = [UIScreen mainScreen].bounds.size.height * 0.5 - 50;
     lockyScreen = NO;
 }
 
-+ (UIWindow *)alterWindow
++ (UIWindow *)alterWindow:(CGFloat)hudToTop
 {
     if(!_window)
     {
@@ -65,6 +64,11 @@ static UIWindow * _window;
         _window.hidden = NO;
     }
     return _window;
+}
+
++ (void)toastScuess:(NSString *)message
+{
+    [ACProgressHUD toastMessage:message withImage:[UIImage imageNamed:@"ACProgressHUD.bundle/success"]];
 }
 
 + (void)showScuess:(NSString *)message
@@ -86,7 +90,7 @@ static UIWindow * _window;
 {
     if (_window) return;
     
-    [ACProgressHUD alterWindow];
+    [ACProgressHUD alterWindow:[UIScreen mainScreen].bounds.size.height * 0.5 - 50];
     
     UIView * view = [[UIView alloc] init];
     
@@ -158,7 +162,7 @@ static UIWindow * _window;
 + (void)showMessage:(NSString *)message
 {
     if (_window) return;
-    [ACProgressHUD alterWindow];
+    [ACProgressHUD alterWindow:[UIScreen mainScreen].bounds.size.height * 0.5 - 50];
     // 文字
     UILabel *label = [[UILabel alloc] init];
     
@@ -190,7 +194,7 @@ static UIWindow * _window;
 + (void)showMessage:(NSString *)message withImage:(UIImage *)image;
 {
     if(_window)return;
-    [ACProgressHUD alterWindow];
+    [ACProgressHUD alterWindow:[UIScreen mainScreen].bounds.size.height * 0.5 - 50];
     
     UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
 
@@ -223,6 +227,43 @@ static UIWindow * _window;
     [ACProgressHUD animate];
 }
 
++ (void)toastMessage:(NSString *)message withImage:(UIImage *)image
+{
+    if(_window)return;
+    [ACProgressHUD alterWindow:-50];
+    
+    UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [btn setImage:image forState:UIControlStateNormal];
+    btn.titleEdgeInsets = UIEdgeInsetsMake(0, btnImageTxtMargin, 0, 0);
+    btn.titleLabel.numberOfLines = 0;
+    btn.titleLabel.font = textFont;
+    [btn setTitleColor:textColor forState:UIControlStateNormal];
+    [btn setTitle:message forState:UIControlStateNormal];
+    UIColor * color = [[NSUserDefaults standardUserDefaults] objectForKey:TOAST_COLOR];
+    [btn  setBackgroundColor:color ? color : [UIColor blackColor]];
+    
+    //计算图片和文字尺寸大小
+    CGSize imgSize = image.size;
+    //文字最大宽度
+    CGFloat maxTxtWidth = ACProgressHUD_ScreenWidth -contentMargin * 2 - imgSize.width - btnImageTxtMargin;
+    
+    CGSize txtSize = [ACProgressHUD sizeWithText:message font:textFont maxSize:CGSizeMake(maxTxtWidth, MAXFLOAT)];
+    
+    //计算按钮宽高
+//    CGFloat btnWidth = txtSize.width + btnImageTxtMargin + imgSize.width + contentMargin * 2;
+    CGFloat btnHeight = MAX(imgSize.height, txtSize.height) + contentMargin * 2;
+    
+    btn.frame = CGRectMake(0, (hudMaxHeight - btnHeight) * 0.5, ACProgressHUD_ScreenWidth, btnHeight);
+//    btn.layer.cornerRadius = contentCornerRadius;
+//    btn.clipsToBounds = YES;
+    [_window addSubview:btn];
+    
+    if (lockyScreen) btn.center = _window.center;
+    
+    [ACProgressHUD toastAnimate];
+}
+
 + (CGSize)sizeWithText:(NSString *)text font:(UIFont *)font maxSize:(CGSize)maxSize
 {
     NSDictionary *attrs = @{NSFontAttributeName : font};
@@ -242,4 +283,18 @@ static UIWindow * _window;
     }];
 }
 
++ (void)toastAnimate
+{
+    [UIView animateWithDuration:apperDuration animations:^{
+        _window.alpha = 1.0;
+        _window.center = CGPointMake(ACProgressHUD_ScreenWidth * 0.5, 25);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:disapperDuration delay:showTime options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            _window.center = CGPointMake(ACProgressHUD_ScreenWidth * 0.5, -25);
+            _window.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            _window = nil;
+        }];
+    }];
+}
 @end

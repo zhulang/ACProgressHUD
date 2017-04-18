@@ -20,7 +20,7 @@
 }
 
 - (IBAction)clickTest:(UIButton *)sender {
-    [ACProgressHUD showScuess:@"成功了"];
+    [ACProgressHUD toastScuess:@"成功了"];
 }
 
 - (void)didReceiveMemoryWarning {
