@@ -8,6 +8,8 @@
 
 #import "ACProgressHUD.h"
 NSString * TOAST_COLOR = @"TOAST_COLOR";
+NSString * BASE_COLOR = @"BASE_COLOR";
+
 #define ACProgressHUD_ScreenWidth [UIScreen mainScreen].bounds.size.width //the screen width
 
 /*delay time ,unit NSTimeInterval */
@@ -26,7 +28,6 @@ static CGFloat  contentCornerRadius;//content view cornerRadius,default 5.0
 static CGSize  indicatorViewSize;//default {30,30}
 
 static UIFont *  textFont;//tht txt. font
-static UIColor *  hudColor;//tht content backgroundColor
 static UIColor *  textColor;//tht txt color
 
 /*lock the screen */
@@ -47,10 +48,19 @@ static UIWindow * _window;
     contentCornerRadius = 5.0;
     indicatorViewSize = CGSizeMake(30, 30);
     textFont = [UIFont systemFontOfSize:15.0];
-    hudColor = [UIColor blackColor];
     textColor = [UIColor whiteColor];
 //    hudToTop = [UIScreen mainScreen].bounds.size.height * 0.5 - 50;
     lockyScreen = NO;
+}
+
++ (void)setToastBackgroundColor:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue andAlpha:(CGFloat)alpha
+{
+    [[NSUserDefaults standardUserDefaults] setValue:[NSArray arrayWithObjects:@(red),@(green),@(blue),@(alpha), nil] forKey:TOAST_COLOR];
+}
+
++ (void)setBackgroundColor:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue andAlpha:(CGFloat)alpha
+{
+    [[NSUserDefaults standardUserDefaults] setValue:[NSArray arrayWithObjects:@(red),@(green),@(blue),@(alpha), nil] forKey:BASE_COLOR];
 }
 
 + (UIWindow *)alterWindow:(CGFloat)hudToTop
@@ -93,8 +103,9 @@ static UIWindow * _window;
     [ACProgressHUD alterWindow:[UIScreen mainScreen].bounds.size.height * 0.5 - 50];
     
     UIView * view = [[UIView alloc] init];
-    
-    view.backgroundColor = hudColor;
+    NSArray * arr = [[NSUserDefaults standardUserDefaults] valueForKey:BASE_COLOR];
+    UIColor * color = [UIColor colorWithRed:[arr[0] floatValue]/255.0 green:[arr[1] floatValue]/255.0 blue:[arr[2] floatValue]/255.0 alpha:[arr[3] floatValue]];
+    view.backgroundColor = color ? color : [UIColor blackColor];
     //文字最大宽度
     CGFloat maxViewWidth = ACProgressHUD_ScreenWidth - indicatorViewSize.width - contentMargin * 2;
     
@@ -182,7 +193,9 @@ static UIWindow * _window;
     label.text = message;
     label.numberOfLines = 0;
     label.textColor = textColor;
-    label.backgroundColor = hudColor;
+    NSArray * arr = [[NSUserDefaults standardUserDefaults] valueForKey:BASE_COLOR];
+    UIColor * color = [UIColor colorWithRed:[arr[0] floatValue]/255.0 green:[arr[1] floatValue]/255.0 blue:[arr[2] floatValue]/255.0 alpha:[arr[3] floatValue]];
+    label.backgroundColor = color ? color : [UIColor blackColor];
     label.textAlignment = NSTextAlignmentCenter;
     [_window addSubview:label];
     
@@ -204,7 +217,9 @@ static UIWindow * _window;
     btn.titleLabel.font = textFont;
     [btn setTitleColor:textColor forState:UIControlStateNormal];
     [btn setTitle:message forState:UIControlStateNormal];
-    [btn  setBackgroundColor:hudColor];
+    NSArray * arr = [[NSUserDefaults standardUserDefaults] valueForKey:BASE_COLOR];
+    UIColor * color = [UIColor colorWithRed:[arr[0] floatValue]/255.0 green:[arr[1] floatValue]/255.0 blue:[arr[2] floatValue]/255.0 alpha:[arr[3] floatValue]];
+    [btn  setBackgroundColor:color];
     
     //计算图片和文字尺寸大小
     CGSize imgSize = image.size;
@@ -240,8 +255,9 @@ static UIWindow * _window;
     btn.titleLabel.font = textFont;
     [btn setTitleColor:textColor forState:UIControlStateNormal];
     [btn setTitle:message forState:UIControlStateNormal];
-    UIColor * color = [[NSUserDefaults standardUserDefaults] objectForKey:TOAST_COLOR];
-    [btn  setBackgroundColor:color ? color : [UIColor blackColor]];
+    NSArray * arr = [[NSUserDefaults standardUserDefaults] valueForKey:TOAST_COLOR];
+    UIColor * color = [UIColor colorWithRed:[arr[0] floatValue]/255.0 green:[arr[1] floatValue]/255.0 blue:[arr[2] floatValue]/255.0 alpha:[arr[3] floatValue]];
+    [btn  setBackgroundColor:color];
     
     //计算图片和文字尺寸大小
     CGSize imgSize = image.size;

@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 extern NSString * TOAST_COLOR;
+extern NSString * BASE_COLOR;
 
 @interface ACProgressHUD : NSObject
+/**
+ *  设置背景颜色
+ */
++ (void)setBackgroundColor:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue andAlpha:(CGFloat)alpha;
+/**
+ *  设置TOAST背景颜色
+ */
++ (void)setToastBackgroundColor:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue andAlpha:(CGFloat)alpha;
 /**
  *  土司方式显示成功信息
  *
