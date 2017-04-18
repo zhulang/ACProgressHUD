@@ -7,10 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
+extern NSString * TOAST_COLOR;
 
 @interface ACProgressHUD : NSObject
-
+/**
+ *  土司方式显示成功信息
+ *
+ *  @param message 成功提示信息,默认前面有成功图标
+ */
++ (void)toastScuess:(NSString *)message;
+/**
+ *  土司方式显示成功信息
+ *
+ *  @param message 成功提示信息,默认前面有成功图标
+ */
++ (void)toastMessage:(NSString *)message withImage:(UIImage *)image;
 /**
  *  显示成功信息
  *
